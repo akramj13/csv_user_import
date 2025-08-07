@@ -1,0 +1,31 @@
+csv_user_import.settings:
+  path: '/admin/config/people/csv-user-import'
+  defaults:
+    _form: '\Drupal\csv_user_import\Form\CSVUserImportSettingsForm'
+    _title: 'CSV User Import Settings'
+  requirements:
+    _permission: 'administer csv user import'
+
+csv_user_import.import:
+  path: '/admin/people/csv-user-import'
+  defaults:
+    _controller: '\Drupal\csv_user_import\Controller\CSVUserImportController::import'
+    _title: 'CSV User Import'
+  requirements:
+    _permission: 'import csv users'
+
+csv_user_import.help:
+  path: '/admin/people/csv-user-import/help'
+  defaults:
+    _controller: '\Drupal\csv_user_import\Controller\CSVUserImportController::help'
+    _title: 'How to Use CSV User Import'
+  requirements:
+    _permission: 'import csv users'
+
+csv_user_import.download_template:
+  path: '/admin/people/csv-user-import/download-template'
+  defaults:
+    _controller: '\Drupal\csv_user_import\Controller\CSVUserImportController::downloadTemplate'
+    _title: 'Download CSV Template'
+  requirements:
+    _permission: 'import csv users'

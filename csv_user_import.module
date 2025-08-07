@@ -1,0 +1,58 @@
+<?php
+
+/**
+ * @file
+ * Contains csv_user_import.module.
+ * 
+ * Provides functionality to import user accounts from CSV files.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function csv_user_import_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.csv_user_import':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The CSV User Import module allows administrators to bulk import user accounts from CSV files. You can import usernames, email addresses, and assign roles to users during the import process.') . '</p>';
+      $output .= '<h3>' . t('Usage') . '</h3>';
+      $output .= '<p>' . t('To import user accounts:') . '</p>';
+      $output .= '<ol>';
+      $output .= '<li>' . t('Navigate to Administration > People > CSV User Import.') . '</li>';
+      $output .= '<li>' . t('Upload your CSV file with user data.') . '</li>';
+      $output .= '<li>' . t('Configure the delimiter settings if needed.') . '</li>';
+      $output .= '<li>' . t('Select whether users should be activated immediately.') . '</li>';
+      $output .= '<li>' . t('Click the import button to create the user accounts.') . '</li>';
+      $output .= '</ol>';
+      $output .= '<h3>' . t('CSV Format') . '</h3>';
+      $output .= '<p>' . t('Your CSV files should contain user data in the following format:') . '</p>';
+      $output .= '<ul>';
+      $output .= '<li>' . t('<strong>Three Columns:</strong> username, email, role') . '</li>';
+      $output .= '<li>' . t('<strong>Header Row:</strong> First row should contain column headers') . '</li>';
+      $output .= '<li>' . t('<strong>Example:</strong> john_doe, john@example.com, administrator') . '</li>';
+      $output .= '</ul>';
+      return $output;
+
+    case 'csv_user_import.import':
+      return '<p>' . t('Import user accounts from CSV files. Upload a CSV file containing usernames, email addresses, and roles. Passwords will be auto generated.') . '</p>';
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function csv_user_import_theme() {
+  return [
+    'csv_user_import_results' => [
+      'variables' => [
+        'count' => 0,
+        'created_users' => [],
+        'errors' => [],
+        'skipped_users' => [],
+      ],
+    ],
+  ];
+}

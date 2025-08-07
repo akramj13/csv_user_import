@@ -1,0 +1,6 @@
+csv_user_import.import:
+  title: 'CSV User Import'
+  route_name: csv_user_import.import
+  description: 'Import user accounts from CSV files'
+  parent: entity.user.collection
+  weight: 10

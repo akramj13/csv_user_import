@@ -1,0 +1,192 @@
+<?php
+
+namespace Drupal\csv_user_import\Controller;
+
+use Drupal\Core\Controller\ControllerBase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Form\FormBuilder;
+use Drupal\Core\Url;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+
+/**
+ * Controller for CSV user import functionality.
+ */
+class CSVUserImportController extends ControllerBase {
+
+  /**
+   * The form builder.
+   *
+   * @var \Drupal\Core\Form\FormBuilder
+   */
+  protected $formBuilder;
+
+  /**
+   * Constructs a new CSVUserImportController object.
+   *
+   * @param \Drupal\Core\Form\FormBuilder $form_builder
+   *   The form builder.
+   */
+  public function __construct(FormBuilder $form_builder) {
+    $this->formBuilder = $form_builder;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('form_builder')
+    );
+  }
+
+  /**
+   * Main import page for CSV user import.
+   */
+  public function import() {
+    return $this->formBuilder->getForm('Drupal\csv_user_import\Form\CSVUserImportForm');
+  }
+
+  /**
+   * Help page explaining how to use the CSV user import module.
+   */
+  public function help() {
+    $main_url = Url::fromRoute('csv_user_import.import')->toString();
+    $template_url = Url::fromRoute('csv_user_import.download_template')->toString();
+
+    return [
+      '#type' => 'markup',
+      '#markup' => '
+      <div class="csv-user-import-help">
+        <div class="csv-user-import-help-header">
+          <h2>How to Use the CSV User Import Module</h2>
+          <p class="csv-user-import-help-intro">This module allows administrators to bulk import user accounts from CSV files. Follow these steps to successfully import your user data.</p>
+        </div>
+        
+        <div class="csv-user-import-help-section">
+          <h3>📋 What This Module Does</h3>
+          <ul>
+            <li><strong>Imports user accounts</strong> from CSV files (username, email, role format)</li>
+            <li><strong>Automatically generates passwords</strong> using the GenPass module</li>
+            <li><strong>Assigns user roles</strong> during import process</li>
+            <li><strong>Validates user data</strong> and provides detailed feedback on processing</li>
+            <li><strong>Prevents duplicate accounts</strong> by checking existing usernames and emails</li>
+            <li><strong>Logs all operations</strong> to Drupal admin logs for review</li>
+          </ul>
+        </div>
+
+        <div class="csv-user-import-help-section">
+          <h3>📁 CSV File Format Requirements</h3>
+          <p>Your CSV files should contain user data in exactly three columns:</p>
+          <ul>
+            <li><strong>Column 1:</strong> Username (must be unique, only a-Z, 0-9, -, _, @ allowed)</li>
+            <li><strong>Column 2:</strong> Email address (must be valid and unique)</li>
+            <li><strong>Column 3:</strong> Role machine name (e.g., administrator, editor, authenticated)</li>
+            <li><strong>Header Row:</strong> First row should contain column headers</li>
+            <li><strong>Supported Delimiters:</strong> Comma, semicolon, tab, or pipe</li>
+          </ul>
+          
+          <h4>Example CSV File:</h4>
+          <div class="csv-user-import-example">
+            <pre>username,email,role
+john_doe,john@example.com,administrator
+jane_smith,jane@example.com,editor
+bob_wilson,bob@example.com,authenticated</pre>
+          </div>
+          
+          <p><a href="' . $template_url . '" class="csv-user-import-button-small">📥 Download CSV Template</a></p>
+        </div>
+
+        <div class="csv-user-import-help-section">
+          <h3>🔧 How to Import Users</h3>
+          <ol>
+            <li><strong>Prepare your CSV file</strong> with usernames, emails, and roles</li>
+            <li><strong>Go to the import page:</strong> <a href="' . $main_url . '">CSV User Import</a></li>
+            <li><strong>Upload your CSV file</strong> using the file upload form</li>
+            <li><strong>Select the correct delimiter</strong> (usually comma)</li>
+            <li><strong>Check "Has Header Row"</strong> if your file has a header</li>
+            <li><strong>Choose activation status</strong> for newly created users</li>
+            <li><strong>Click "Import Users"</strong> to process the file</li>
+            <li><strong>Review the results</strong> displayed below the form</li>
+          </ol>
+        </div>
+
+        <div class="csv-user-import-help-section">
+          <h3>⚙️ What Happens During Import</h3>
+          <ul>
+            <li>The module reads your CSV file and validates each user record</li>
+            <li>Checks for existing usernames and email addresses to prevent duplicates</li>
+            <li>Creates user accounts with the specified roles</li>
+            <li>Passwords are automatically generated by the GenPass module</li>
+            <li>Users can be activated immediately or left inactive for admin review</li>
+            <li>All operations are logged to Drupal admin logs</li>
+            <li>Detailed results show created users, skipped duplicates, and any errors</li>
+          </ul>
+        </div>
+
+        <div class="csv-user-import-help-section">
+          <h3>🛠️ Password Management</h3>
+          <p>This module integrates with the GenPass module for password management:</p>
+          <ul>
+            <li><strong>Automatic Generation:</strong> Passwords are automatically created for new users</li>
+            <li><strong>Security:</strong> Generated passwords meet Drupal security requirements</li>
+            <li><strong>User Notification:</strong> Users can reset their passwords using the standard Drupal password reset functionality</li>
+            <li><strong>Admin Control:</strong> Administrators can manually set passwords after import if needed</li>
+          </ul>
+        </div>
+
+        <div class="csv-user-import-help-section">
+          <h3>🎯 User Roles</h3>
+          <p>The module supports assigning roles during import:</p>
+          <ul>
+            <li><strong>Use Machine Names:</strong> Use the machine name of roles (e.g., "administrator", "editor")</li>
+            <li><strong>Single Role Per User:</strong> Each user gets one role plus the default "authenticated" role</li>
+            <li><strong>Valid Roles Only:</strong> Invalid role names will cause import errors for that user</li>
+            <li><strong>Role Permissions:</strong> Users will inherit all permissions from their assigned role</li>
+          </ul>
+        </div>
+
+        <div class="csv-user-import-help-section">
+          <h3>🛠️ Troubleshooting</h3>
+          <ul>
+            <li><strong>File upload fails:</strong> Check your server upload limits</li>
+            <li><strong>Duplicate usernames/emails:</strong> Users with existing usernames or emails will be skipped</li>
+            <li><strong>Invalid roles:</strong> Check that role machine names are correct</li>
+            <li><strong>Permission denied:</strong> Ensure you have "import csv users" permission</li>
+            <li><strong>Detailed errors:</strong> Check Drupal logs at /admin/reports/dblog</li>
+          </ul>
+        </div>
+
+        <div class="csv-user-import-help-footer">
+          <p><a href="' . $main_url . '">← Back to CSV User Import</a></p>
+        </div>
+      </div>
+      ',
+    ];
+  }
+
+  /**
+   * Download CSV template file.
+   */
+  public function downloadTemplate() {
+    // Get the path to the template file in the module
+    $module_path = \Drupal::service('extension.list.module')->getPath('csv_user_import');
+    $template_path = $module_path . '/test_data/users_template.csv';
+    
+    // Check if the template file exists
+    if (!file_exists($template_path)) {
+      $this->messenger()->addError($this->t('Template file not found.'));
+      return $this->redirect('csv_user_import.import');
+    }
+
+    // Create a binary file response for download
+    $response = new BinaryFileResponse($template_path);
+    $response->setContentDisposition(
+      ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+      'users_template.csv'
+    );
+
+    return $response;
+  }
+
+}

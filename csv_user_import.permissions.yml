@@ -1,0 +1,9 @@
+import csv users:
+  title: 'Import CSV user data'
+  description: 'Allow users to import user accounts from CSV files'
+  restrict access: TRUE
+
+administer csv user import:
+  title: 'Administer CSV user import'
+  description: 'Configure CSV user import settings and manage imports'
+  restrict access: TRUE

@@ -1,0 +1,7 @@
+csv_user_import_styles:
+  version: 1.x
+  css:
+    theme:
+      css/csv_user_import.css: {}
+  dependencies:
+    - core/drupal

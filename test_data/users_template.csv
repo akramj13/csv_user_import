@@ -1,0 +1,5 @@
+username,email,role
+john_doe,john@example.com,administrator
+jane_smith,jane@example.com,editor
+bob_wilson,bob@example.com,authenticated
+alice_cooper,alice@example.com,authenticated

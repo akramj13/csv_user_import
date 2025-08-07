@@ -1,0 +1,13 @@
+name: CSV User Import
+description: Import user accounts from CSV files with usernames, emails, and roles
+package: User Management
+
+type: module
+core_version_requirement: ^10.4 || ^11
+
+dependencies:
+  - drupal:user
+
+configure: csv_user_import.settings
+
+php: 8.3

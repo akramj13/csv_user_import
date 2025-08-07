@@ -1,0 +1,4 @@
+services:
+  csv_user_import.service:
+    class: Drupal\csv_user_import\Service\CSVUserImportService
+    arguments: ['@logger.factory', '@entity_type.manager', '@transliteration', '@config.factory']

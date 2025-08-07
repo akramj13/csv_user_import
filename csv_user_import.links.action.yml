@@ -1,0 +1,5 @@
+csv_user_import.import_action:
+  route_name: csv_user_import.import
+  title: 'CSV User Import'
+  appears_on:
+    - entity.user.collection

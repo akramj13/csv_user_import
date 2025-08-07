@@ -1,0 +1,4 @@
+default_role: 'authenticated'
+max_import_size: 1000
+log_imports: true
+allow_duplicate_emails: false

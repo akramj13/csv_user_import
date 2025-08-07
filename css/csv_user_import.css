@@ -1,0 +1,63 @@
+/**
+ * @file
+ * CSS for CSV User Import module.
+ */
+
+.csv-user-import-results {
+  margin-top: 20px;
+  padding: 15px;
+  border: 1px solid #d4d4d4;
+  background-color: #f8f8f8;
+}
+
+.csv-user-import-results h3 {
+  margin-top: 0;
+  color: #2e5c8a;
+}
+
+.csv-user-import-results h4 {
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.csv-user-import-results .import-summary {
+  background-color: #ffffff;
+  padding: 10px 15px;
+  border: 1px solid #e0e0e0;
+  margin-bottom: 15px;
+  border-radius: 4px;
+}
+
+.csv-user-import-results .import-summary p {
+  margin: 5px 0;
+}
+
+.csv-user-import-results ul {
+  max-height: 300px;
+  overflow-y: auto;
+  border: 1px solid #e0e0e0;
+  background-color: #ffffff;
+  padding: 10px 15px;
+  margin: 10px 0;
+}
+
+.csv-user-import-results .error-list {
+  background-color: #fdf2f2;
+  border-color: #f5c6cb;
+}
+
+.csv-user-import-form-header {
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.csv-user-import-form-header h2 {
+  margin: 0 0 10px 0;
+  color: #2e5c8a;
+}
+
+.csv-user-import-form-header p {
+  margin: 0;
+  color: #666;
+}
